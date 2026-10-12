@@ -1,0 +1,12 @@
+Flask>=3.0
+flask-cors>=4.0
+Werkzeug>=3.0
+numpy>=1.26
+pandas>=2.1
+scikit-learn>=1.4
+pypdf>=4.0
+
+# Optional: enables true semantic (embedding) matching.
+#   pip install sentence-transformers
+#   set USE_EMBEDDINGS=1   (Windows)   before   python app.py
+# sentence-transformers>=2.6

@@ -1,0 +1,27 @@
+# --- Secrets / local configuration -------------------------------------
+.env
+config_local.py
+
+# --- Local-only tooling (not part of the public repo) -------------------
+config_local.example.py
+view_db.py
+docs/
+mysql/
+
+# --- Local data (database, uploads, saved mail settings) ---------------
+data/
+
+# --- Python -------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# --- OS / editors -------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/

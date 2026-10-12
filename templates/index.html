@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HireMatch &middot; AI Resume Matcher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+
+<!-- ========================= AUTH / LANDING ========================= -->
+<div id="authScreen" class="landing">
+  <div class="landing-panel">
+    <div class="brand large">
+      <div class="logo">HM</div>
+      <span class="brand-name">HireMatch</span>
+    </div>
+    <h1>Smarter hiring with <span class="grad">NLP&nbsp;+&nbsp;AI</span></h1>
+    <p class="lead">Upload a resume, post a job, and let our matching engine rank
+      candidates by real skill fit — with a full breakdown of matched and missing skills.</p>
+    <ul class="feature-list">
+      <li><span class="tick">✓</span> Explainable match score (TF-IDF, semantic &amp; skill overlap)</li>
+      <li><span class="tick">✓</span> Separate spaces for candidates &amp; companies</li>
+      <li><span class="tick">✓</span> Resume upload with automatic skill extraction</li>
+      <li><span class="tick">✓</span> Admin control over every account &amp; the database</li>
+    </ul>
+    <div class="pill-row">
+      <span class="pill">Python</span><span class="pill">NLP</span>
+      <span class="pill">Machine Learning</span><span class="pill">SQL</span>
+      <span class="pill">Analytics</span>
+    </div>
+  </div>
+
+  <div class="landing-form">
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-auth="login">Sign in</button>
+        <button class="auth-tab" data-auth="register">Create account</button>
+      </div>
+
+      <!-- Login -->
+      <form id="loginForm" class="auth-form" autocomplete="off">
+        <h2>Welcome back</h2>
+        <p class="sub">Sign in with your email or mobile number.</p>
+        <label>Email or mobile</label>
+        <input id="loginId" class="input" autocomplete="off" placeholder="you@example.com or +91-XXXXXXXXXX" />
+        <label>Password</label>
+        <div class="pw-wrap">
+          <input id="loginPw" class="input" type="password" placeholder="••••••••" />
+          <button type="button" class="pw-toggle" data-pw="loginPw" aria-label="Show password">👁</button>
+        </div>
+        <button type="submit" class="btn full">Sign in</button>
+        <p id="loginErr" class="err-inline"></p>
+      </form>
+
+      <!-- Register -->
+      <form id="regForm" class="auth-form" style="display:none" autocomplete="off">
+        <h2>Create your account</h2>
+        <div class="role-cards">
+          <label class="role-card">
+            <input type="radio" name="role" value="candidate" checked />
+            <div><b>Candidate</b><span>Find jobs, upload a resume</span></div>
+          </label>
+          <label class="role-card">
+            <input type="radio" name="role" value="company" />
+            <div><b>Company</b><span>Post jobs, review applicants</span></div>
+          </label>
+        </div>
+
+        <label id="nameLabel">Full name *</label>
+        <input id="regName" class="input" placeholder="Your name" />
+
+        <div id="candidateFields">
+          <div class="two">
+            <div><label>Location</label><input id="regLoc" class="input" placeholder="City" /></div>
+            <div><label>Years of experience</label><input id="regYears" class="input" type="number" min="0" step="0.5" placeholder="0" /></div>
+          </div>
+        </div>
+
+        <div id="companyFields" style="display:none">
+          <label>Company name *</label>
+          <input id="regCompany" class="input" placeholder="Acme Pvt Ltd" />
+          <div class="two">
+            <div><label>Industry</label><input id="regIndustry" class="input" placeholder="Software" /></div>
+            <div><label>Website</label><input id="regWebsite" class="input" placeholder="https://…" /></div>
+          </div>
+        </div>
+
+        <div class="two">
+          <div><label>Email</label><input id="regEmail" class="input" placeholder="you@example.com" /></div>
+          <div><label>Mobile number</label><input id="regPhone" class="input" placeholder="+91-…" /></div>
+        </div>
+        <p class="muted tiny">Provide at least one of email / mobile — you can sign in with either.</p>
+        <label>Password * <span class="muted tiny">(min 6)</span></label>
+        <div class="pw-wrap">
+          <input id="regPw" class="input" type="password" placeholder="••••••••" />
+          <button type="button" class="pw-toggle" data-pw="regPw" aria-label="Show password">👁</button>
+        </div>
+        <button type="submit" class="btn full">Create account</button>
+        <p id="regErr" class="err-inline"></p>
+      </form>
+
+      <div class="demo-box">
+        <b>Demo accounts</b> — password <code>password123</code>
+        <div class="demo-grid">
+          <button class="demo-chip" data-demo="admin@resume.com">👑 Admin</button>
+          <button class="demo-chip" data-demo="aarav.sharma@example.com">🎓 Candidate</button>
+          <button class="demo-chip" data-demo="hr@neurotech.ai">🏢 Company</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================= APP ========================= -->
+<div class="app" id="app" style="display:none">
+  <header class="topnav">
+    <div class="brand">
+      <div class="logo">HM</div>
+      <span class="brand-name">HireMatch</span>
+    </div>
+    <nav class="nav" id="navList"></nav>
+    <div class="nav-user">
+      <div class="avatar" id="avatar">U</div>
+      <div class="nav-user-info">
+        <span class="user-name" id="userName">User</span>
+        <span class="user-role" id="userRole">—</span>
+      </div>
+      <button class="btn ghost small" id="btnLogout">Logout</button>
+    </div>
+  </header>
+  <main class="content">
+    <div class="page-head">
+      <div>
+        <h1 id="pageTitle">Dashboard</h1>
+        <p class="page-sub" id="pageSub"></p>
+      </div>
+      <div class="top-actions" id="topActions"></div>
+    </div>
+    <div id="views"></div>
+  </main>
+</div>
+
+<!-- ========================= MODAL ========================= -->
+<div id="modal" class="modal-backdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modalTitle">Details</h3>
+      <button class="x" onclick="App.closeModal()">&times;</button>
+    </div>
+    <div id="modalBody" class="modal-body"></div>
+  </div>
+</div>
+
+<!-- ========================= TOASTS ========================= -->
+<div id="toasts" class="toasts" aria-live="polite"></div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
